@@ -1,0 +1,38 @@
+# Show progress bar, even if in quiet mode
+--progress
+
+# Display progress in console titlebar
+--console-title
+
+# Template for progress outputs
+--progress-template "download-title:%(info.id)s - %(info.title)s - %(progress.eta)s"
+
+# Write thumbnail image to disk
+--write-thumbnail
+--convert-thumbnails jpg
+
+# Add chapter markers to the video file
+--embed-chapters
+
+# Embed thumbnail in the video as cover art
+--embed-thumbnail
+
+# Embed metadata to the video file. Also embeds chapters/infojson if present unless
+--embed-metadata
+--add-metadata
+
+# Abort after downloading NUMBER files
+--max-downloads 1
+
+# Generic video filter.
+--match-filter "!is_live"
+
+# Minimum download rate in bytes per second below which throttling is assumed and the video data is re-extracted
+--throttled-rate 1M
+
+# SponsorBlock categories to be removed from the video file
+--sponsorblock-remove all
+
+-S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4
+
+-o "%(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s"
