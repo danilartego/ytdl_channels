@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#* yt_channels ver_2.5
+#* yt_channels ver_2.6
 
 # Эта команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
 cd "$(dirname "$(readlink -f "$0")")"
@@ -15,12 +15,12 @@ rm -rf $folder/_temp*
 # Задание переменных качества скачивания и формат файлов
 opus="-S acodec:opus -x"
 m4a="-S acodec:m4a -x"
-sd="-S hdr:HLG,res:480,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
-hd="-S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
-fhd="-S hdr:HLG,res:1080,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
-v2k="-S hdr:HLG,res:1440,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
-v4k="-S hdr:HLG,res:2160,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
-low="-S hdr:HLG,res:240,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4"
+sd="-S res:480,vcodec:vp9:h264:av01,acodec:opus,br:32 --merge-output-format mp4"
+hd="-S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:m4a:opus --merge-output-format mp4"
+fhd="-S hdr:HLG,res:1080,vcodec:av01:vp9.2:vp9,acodec:m4a:opus--merge-output-format mp4"
+v2k="-S hdr:HLG,res:1440,vcodec:av01:vp9.2:vp9,acodec:m4a:opus--merge-output-format mp4"
+v4k="-S hdr:HLG,res:2160,vcodec:av01:vp9.2:vp9,acodec:m4a:opus --merge-output-format mp4"
+low="-S res:144,vcodec:vp9:h264:av01,acodec:opus,br:32 --merge-output-format mp4"
 
 # Папка для загрузки каналов
 load_folder="/mnt/e/yt_channels_loads"
