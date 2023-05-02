@@ -1,6 +1,4 @@
 url/*.txt
-load_channels
-youtube_downloads
-_temp*
-downloads.txt
+*load*
+*temp*
 *test*
