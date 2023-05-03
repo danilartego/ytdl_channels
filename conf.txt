@@ -33,6 +33,8 @@
 # SponsorBlock categories to be removed from the video file
 --sponsorblock-remove all
 
--S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:opus:m4a --merge-output-format mp4
+-S hdr:HLG,res:720,vcodec:vp9:vp9.2:av01,acodec:opus:m4a
+
+--merge-output-format mp4
 
 -o "%(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s"
