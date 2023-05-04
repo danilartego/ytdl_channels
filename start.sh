@@ -2,6 +2,8 @@
 
 #* yt_channels ver_2.9
 
+time_start_script=$(date +%s)
+
 # Эта команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
 cd "$(dirname "$(readlink -f "$0")")"
 folder="$(dirname "$(readlink -f "$0")")"
@@ -17,8 +19,9 @@ opus="-S acodec:opus -x"
 m4a="-S acodec:m4a -x"
 
 low="-S res:144,vcodec:vp9:h264:av01,acodec:opus,br:32"
-sd="-S res:480,vcodec:vp9:h264:av01,acodec:opus,br:32"
+sd="-S res:480,vcodec:vp9:h264:av01,acodec:opus,br:70"
 hd="-S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
+hdl="-S res:720,vcodec:av01:vp9.2:vp9,acodec:opus,br:70"
 fhd="-S hdr:HLG,res:1080,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
 v2k="-S hdr:HLG,res:1440,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
 v4k="-S hdr:HLG,res:2160,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
@@ -50,14 +53,19 @@ for i in $url; do
   # Получение URL
   for u in $(cat $i); do
 
+    time_start_video=$(date +%s)
+
+    # Определение папки по имени канала из пути ссылки
     folder_name=$(echo $u | cut -d "@" -f 2 | cut -d "/" -f 1)
     
     echo $i | grep -qi "playlist_" && folder_name=""
     categoria=$(basename ${i%_*})
 
+    # Определение названия итогового файла
     name_file=$channel_file
     echo $i | grep -qi "playlist_" && name_file=$playlist_file
 
+    # Выбор качества видео
     codec=$sd
     echo $i | grep -qi "_opus" && codec=$opus
     echo $i | grep -qi "_m4a" && codec=$m4a
@@ -66,42 +74,60 @@ for i in $url; do
     echo $i | grep -qi "_fhd" && codec=$fhd
     echo $i | grep -qi "_v2k" && codec=$v2k
     echo $i | grep -qi "_v4k" && codec=$v4k
-    echo $i | grep -qi "_low" && codec=$low 
+    echo $i | grep -qi "_low" && codec=$low
+    echo $i | grep -qi "_hdl" && codec=$hdl
 
-    echo
-    echo START------------------------------
-
-    channel_name=$(yt-dlp $counts_loads -o "%(uploader_id)s" --get-filenam $u)
-    paylist_name=$(yt-dlp $counts_loads -o "%(playlist)s" --get-filenam $u)
-    channel_title=$(yt-dlp $counts_loads --get-title $u)
-    channel_duration=$(yt-dlp $counts_loads --get-duration $u)
-    # channel_link=$(yt-dlp $counts_loads --get-url $u)
-    link_format=$(yt-dlp $counts_loads $codec --get-format $u)
-
-    echo "Канал         - $channel_name"
-    echo "Плейлист      - $paylist_name"
-    echo "Название      - $channel_title"
-    #echo "Линк          - $channel_link"
-    echo "Формат        - $link_format"
-    echo "Длительность  - $channel_duration"
-    echo
-    echo "Ссылка        - $u"
-    echo "Категория     - $categoria"
-    echo "Каталог       - $load_folder/$categoria"
-          
+    # Создание папки для сохранения видео      
     folder_save="$load_folder/$categoria/$folder_name"
     if [ ! -d "$folder_save" ]; then
       mkdir -p $folder_save
     fi
-      
+
+    # Архив номеров скачанных видео и лог 
     archive="--download-archive $folder_save/_archive.txt"
     log_file="$folder_save/_log.txt"
+
+    echo
+    echo START -------------------------------------------------
+
+    # Получить информацию о видео
+    info=$(yt-dlp $codec $counts_loads $archive -o "%(uploader_id)s/%(playlist)s" --get-filename --get-title --get-duration --get-format $u <<< info)
+
+    # Создать массив информации о видео
+    array=()
+    while read -r line; do
+      array+=("$line") 
+    done <<< "$info"
+
+    ouput_info="${array[1]}"
+
+    # Выделяем название канала
+    channel=${ouput_info%%/*}
+    # Выделяем название плейлиста
+    playlist=${ouput_info#*/}
     
+    # Вывод информации о видео на экран
+    echo "Канал           - $channel"
+    echo "Плейлист        - $playlist"
+    echo "Название видео  - ${array[0]}"
+    echo "Формат видео    - ${array[3]}"
+    echo "Длительность    - ${array[2]}"
+    echo
+    echo "Ссылка на канал - $u"
+    echo "Категория       - $categoria"
+    echo "Каталог         - $load_folder/$categoria"
+
     echo     
+    # Основная команда для скачивания видео
     yt-dlp $config $counts_loads $data_loads $codec $u -P "temp:$folder/_temp-$datetime" -P $folder_save $name_file $archive >$log_file
     
-    echo END--------------------------------
+    # Вычисление времени на скачивание видео
+    time_end_video=$(date +%s)
+    time_diff_video=$((time_end_video-time_start_video))
+    
+    echo "END ------ Время скачивания видео: $(($time_diff_video / 60)) мин $(($time_diff_video % 60)) сек" ------
     echo  
+    
     
   done
 done
@@ -124,3 +150,8 @@ done
 
 # rm -rf $folder/_temp*
 echo Создание обложек завершено
+
+time_end_script=$(date +%s)
+time_diff_script=$((time_end_script-time_start_script))
+    
+echo "Общее время скачивания: $(($time_diff_script / 60)) мин $(($time_diff_script % 60)) сек"
