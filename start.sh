@@ -1,8 +1,28 @@
 #!/bin/bash
 
-#* yt_channels ver_2.9
+#* yt_channels ver_2.9.2
 
+# Папка для сохранения видео
+load_folder="/mnt/e/yt_channels_loads"
+
+# Список URL-адресов
+url="url/*.txt"
+#url="test_url/*.txt"
+
+# Максимальное количество загрузок с канала за 1 запуск скрипта
+counts_loads="--max-downloads 1"
+
+# Максимальная глубина даты выложеного видео от сегодняшней даты
+data_loads="--break-match-filters upload_date>=20130101"
+
+# Файл настроек
+config="--config-location conf.txt"
+
+# Старт времени в секундах
 time_start_script=$(date +%s)
+time_start="$(date '+%A %H:%M')"
+
+echo "Старт: $time_start" >> $load_folder/_log.txt
 
 # Эта команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
 cd "$(dirname "$(readlink -f "$0")")"
@@ -20,30 +40,11 @@ m4a="-S acodec:m4a -x"
 
 low="-S res:144,vcodec:vp9:h264:av01,acodec:opus,br:32"
 sd="-S res:480,vcodec:vp9:h264:av01,acodec:opus,br:70"
-hd="-S hdr:HLG,res:720,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
-hdl="-S res:720,vcodec:av01:vp9.2:vp9,acodec:opus,br:70"
+hdl="-S res:720,vcodec:vp9:av01,acodec:opus,br:70"
+hd="-S res:720,vcodec:vp9:av01,acodec:m4a:opus"
 fhd="-S hdr:HLG,res:1080,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
 v2k="-S hdr:HLG,res:1440,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
 v4k="-S hdr:HLG,res:2160,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
-
-# Папка для загрузки каналов
-load_folder="/mnt/e/yt_channels_loads"
-
-# Список URL-адресов листов
-url="url/*.txt"
-#url="test_url/*.txt"
-
-# Файл настроек
-config="--config-location conf.txt"
-
-# Файл список плейлистов Downloads
-batch="--batch-file downloads.txt"
-
-# Максимальное количество загрузок с канала за 1 запуск скрипта
-counts_loads="--max-downloads 1"
-
-# Максимальная глубина даты выложеного видео от сегодняшней даты
-data_loads="--break-match-filters upload_date>=20130101"
 
 # Имя файла при сохранении
 channel_file="-o %(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
@@ -127,8 +128,6 @@ for i in $url; do
     
     echo "END ------ Время скачивания видео: $(($time_diff_video / 60)) мин $(($time_diff_video % 60)) сек" ------
     echo  
-    
-    
   done
 done
 
@@ -151,7 +150,13 @@ done
 # rm -rf $folder/_temp*
 echo Создание обложек завершено
 
+# Конец времени в секундах
 time_end_script=$(date +%s)
+time_stop="$(date '+%A %H:%M')"
+
+# Вычислени времени исполнения скрипта
 time_diff_script=$((time_end_script-time_start_script))
-    
-echo "Общее время скачивания: $(($time_diff_script / 60)) мин $(($time_diff_script % 60)) сек"
+time_cacl="$(($time_diff_script / 60)) мин. $(($time_diff_script % 60)) сек."    
+
+echo "Общее время работы: $time_cacl"
+echo "Старт/Стоп: $time_start/$time_stop - Время работы: $time_cacl" >> $load_folder/_log.txt
