@@ -33,6 +33,9 @@
 # SponsorBlock categories to be removed from the video file
 --sponsorblock-remove all
 
+# Time to wait before giving up, in seconds
+--socket-timeout 10
+
 -S hdr:HLG,res:720,vcodec:vp9:vp9.2:av01,acodec:opus:m4a
 
 --merge-output-format mp4

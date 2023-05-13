@@ -1,6 +1,10 @@
 #!/bin/bash
 
-#* yt_channels ver_2.9.2
+#* yt_channels ver_2.9.5
+
+# Команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
+cd "$(dirname "$(readlink -f "$0")")"
+folder="$(dirname "$(readlink -f "$0")")"
 
 # Папка для сохранения видео
 load_folder="/mnt/e/yt_channels_loads"
@@ -24,10 +28,6 @@ time_start="$(date '+%A %H:%M')"
 
 echo "Старт: $time_start" >> $load_folder/_log.txt
 
-# Эта команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
-cd "$(dirname "$(readlink -f "$0")")"
-folder="$(dirname "$(readlink -f "$0")")"
-
 # Установка даты
 datetime=$(date +'%Y-%m-%d-%H-%M-%S')
 
@@ -38,13 +38,13 @@ rm -rf $folder/_temp*
 opus="-S acodec:opus -x"
 m4a="-S acodec:m4a -x"
 
-low="-S res:144,vcodec:vp9:h264:av01,acodec:opus,br:32"
-sd="-S res:480,vcodec:vp9:h264:av01,acodec:opus,br:70"
-hdl="-S res:720,vcodec:vp9:av01,acodec:opus,br:70"
-hd="-S res:720,vcodec:vp9:av01,acodec:m4a:opus"
-fhd="-S hdr:HLG,res:1080,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
-v2k="-S hdr:HLG,res:1440,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
-v4k="-S hdr:HLG,res:2160,vcodec:av01:vp9.2:vp9,acodec:m4a:opus"
+low="-f bv+ba/b -S res:240,codec,br:40"
+sd="-f bv+ba/b -S res:480,codec,br:70"
+hdl="-f bv+ba/b -S res:720,codec,br:70"
+hd="-f bv+ba/b -S res:720,codec,br:160"
+fhd="-f bv+ba/b -S res:1080,codec,br:260"
+v2k="-f bv+ba/b -S res:1440,codec,br:260"
+v4k="-f bv+ba/b -S res:2160,codec,br:260"
 
 # Имя файла при сохранении
 channel_file="-o %(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
