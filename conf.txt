@@ -34,10 +34,10 @@
 --sponsorblock-remove all
 
 # Time to wait before giving up, in seconds
---socket-timeout 10
+# --socket-timeout 10
 
--S hdr:HLG,res:720,vcodec:vp9:vp9.2:av01,acodec:opus:m4a
-
+-f bv+ba/b 
+-S res:720,codec,br:160
 --merge-output-format mp4
 
 -o "%(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s"

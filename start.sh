@@ -43,12 +43,14 @@ sd="-f bv+ba/b -S res:480,codec,br:70"
 hdl="-f bv+ba/b -S res:720,codec,br:70"
 hd="-f bv+ba/b -S res:720,codec,br:160"
 fhd="-f bv+ba/b -S res:1080,codec,br:260"
+fhdl="-f bv+ba/b -S res:1080,codec,br:70"
 v2k="-f bv+ba/b -S res:1440,codec,br:260"
 v4k="-f bv+ba/b -S res:2160,codec,br:260"
+max="-f bv+ba/b -S res:5000,codec,br:500"
 
 # Имя файла при сохранении
 channel_file="-o %(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
-playlist_file="-o %(playlist)s_pls/%(uploader_id)s_S01E%(upload_date>%y%m%d)s_[%(id)s].%(ext)s" 
+playlist_file="-o %(playlist)s_pls/%(uploader_id)s_S01E%(upload_date>%y%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
 
 for i in $url; do
   # Получение URL
@@ -73,10 +75,12 @@ for i in $url; do
     echo $i | grep -qi "_sd" && codec=$sd
     echo $i | grep -qi "_hd" && codec=$hd
     echo $i | grep -qi "_fhd" && codec=$fhd
+    echo $i | grep -qi "_fhdl" && codec=$fhdl
     echo $i | grep -qi "_v2k" && codec=$v2k
     echo $i | grep -qi "_v4k" && codec=$v4k
     echo $i | grep -qi "_low" && codec=$low
     echo $i | grep -qi "_hdl" && codec=$hdl
+    echo $i | grep -qi "_max" && codec=$max
 
     # Создание папки для сохранения видео      
     folder_save="$load_folder/$categoria/$folder_name"
