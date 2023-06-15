@@ -1,15 +1,16 @@
 #!/bin/bash
 
-#* yt_channels ver_2.9.5
+#* yt_channels ver_2.9.6 
 
-# Команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь.
+# Команда переходит в каталог, в котором находится текущий скрипт, и выводит его полный путь
 cd "$(dirname "$(readlink -f "$0")")"
+# Команда переходит в каталог, в котором находится текущий скрипт, запись путь в переменную
 folder="$(dirname "$(readlink -f "$0")")"
 
-# Папка для сохранения видео
-load_folder="/mnt/e/yt_channels_loads"
+# Папка для сохранения скачанного видео
+load_folder="/mnt/e/ytdl_downloads"
 
-# Список URL-адресов
+# Список URI каналов и плейлистов
 url="url/*.txt"
 #url="test_url/*.txt"
 
@@ -46,11 +47,11 @@ fhd="-f bv+ba/b -S res:1080,codec,br:260"
 fhdl="-f bv+ba/b -S res:1080,codec,br:70"
 v2k="-f bv+ba/b -S res:1440,codec,br:260"
 v4k="-f bv+ba/b -S res:2160,codec,br:260"
-max="-f bv+ba/b -S res:5000,codec,br:500"
+max="-f bv+ba/b -S res:8000,codec,br:500"
 
 # Имя файла при сохранении
-channel_file="-o %(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
-playlist_file="-o %(playlist)s_pls/%(uploader_id)s_S01E%(upload_date>%y%m%d)s%(n_entries+1-playlist_index)d_[%(id)s].%(ext)s" 
+channel_file="-o %(uploader_id)s_S%(upload_date>%y)sE%(upload_date>%m%d)s%(n_entries+1-playlist_index+100000)d_[%(id)s].%(ext)s" 
+playlist_file="-o %(playlist)s_pls/%(uploader_id)s_S01E%(upload_date>%y%m%d)s%(n_entries+1-playlist_index+100000)d_[%(id)s].%(ext)s" 
 
 for i in $url; do
   # Получение URL

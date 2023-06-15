@@ -1,8 +1,14 @@
 ## Скачивание каналов с Youtube для Linux
 
-В системе должны быть установлены и прописаны в переменной окружения `path`
-
-`yt-dlp, ffmpeg, ffprobe`
+В системе должны быть установлены и прописаны в переменной окружения 
+yt-dlp 2023.03.04 и выше
+```
+sudo wget -qO /usr/local/bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+sudo chmod a+rx /usr/local/bin/yt-dlp
+yt-dlp --version
+sudo yt-dlp -U
+```
+ffmpeg
 
 Для запуска скрипта каждые 5 минут с помощью cron в Windows Subsystem for Linux (WSL) вам нужно изменить строку в файле `crontab` на следующую:
 
